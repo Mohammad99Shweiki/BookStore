@@ -45,7 +45,7 @@ public class BookServiceImpl implements BookService {
             Set<String> bookIds = user.getOrders().stream()
                     .flatMap(order -> order.getItems().stream().map(CartItem::getBookId))
                     .collect(Collectors.toSet());
-            return new HashSet<>(bookRepository.findAll(bookIds));
+            return new HashSet<>(bookRepository.findAllById(bookIds));
         } else {
             throw new ObjectNotFoundException(userId);
         }
