@@ -1,11 +1,19 @@
 package com.projects.bookstore.books;
 
+import com.projects.bookstore.common.exceptions.ObjectNotFoundException;
+import com.projects.bookstore.users.User;
+import com.projects.bookstore.users.UserRepository;
+import com.projects.bookstore.users.order.CartItem;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
+
 
 @Service
 @RequiredArgsConstructor
@@ -13,21 +21,49 @@ public class BookServiceImpl implements BookService {
 
     private final BookRepository bookRepository;
 
+    private final UserRepository userRepository;
+
     @Override
+    @Transactional
     public List<Book> getAllBooks() {
         return bookRepository.findAll();
     }
 
     @Override
+    @Transactional(readOnly = true)
+    public Set<Book> getBooksPurchasedBy(String userId) throws ObjectNotFoundException {
+        Optional<User> userOptional = userRepository.findByUserId(userId);
+
+        if (userOptional.isPresent()) {
+            User user = userOptional.get();
+            Set<String> bookIds = user.getOrders().stream()
+                    .flatMap(order -> order.getItems().stream().map(CartItem::getBookId))
+                    .collect(Collectors.toSet());
+            return new HashSet<>(bookRepository.findAll(bookIds));
+        } else {
+            throw new ObjectNotFoundException("User not found with ID: " + userId);
+        }
+    }
+
+    @Override
+    @Transactional
+    public Set<Book> searchBooks(String search) {
+        return new HashSet<>(bookRepository.findByTitleContaining(search));
+    }
+
+    @Override
+    @Transactional
     public Optional<Book> getBookById(String id) {
         return bookRepository.findById(id);
     }
 
     @Override
+    @Transactional
     public Book addBook(Book book) {
         return bookRepository.save(book);
     }
 
+    @Transactional
     public Book updateBook(String id, Book book) {
         Book existingBook = bookRepository.findById(id).orElse(null);
         if (existingBook != null) {
@@ -40,8 +76,8 @@ public class BookServiceImpl implements BookService {
             if (book.getPublisher() != null) {
                 existingBook.setPublisher(book.getPublisher());
             }
-            if (book.getGenres() != null && !book.getGenres().isEmpty()) {
-                existingBook.setGenres(book.getGenres());
+            if (book.getGenre() != null) {
+                existingBook.setGenre(book.getGenre());
             }
             if (book.getDescription() != null) {
                 existingBook.setDescription(book.getDescription());
@@ -52,11 +88,9 @@ public class BookServiceImpl implements BookService {
             if (book.getPublicationDate() != null) {
                 existingBook.setPublicationDate(book.getPublicationDate());
             }
-            if (book.getPrice() != null) {
-                existingBook.setPrice(book.getPrice());
-            }
-            if (book.getAbstractInfo() != null) {
-                existingBook.setAbstractInfo(book.getAbstractInfo());
+            existingBook.setPrice(book.getPrice());
+            if (book.getDescription() != null) {
+                existingBook.setDescription(book.getDescription());
             }
             if (book.getLanguage() != null) {
                 existingBook.setLanguage(book.getLanguage());
@@ -71,6 +105,7 @@ public class BookServiceImpl implements BookService {
 
 
     @Override
+    @Transactional
     public void deleteBook(String id) {
         bookRepository.deleteById(id);
     }

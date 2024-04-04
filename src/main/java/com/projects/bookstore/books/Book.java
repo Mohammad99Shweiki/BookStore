@@ -4,17 +4,17 @@ import lombok.*;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import java.net.URL;
 import java.util.List;
 
-@Document(collection = "books")
-@Builder
 @AllArgsConstructor
 @NoArgsConstructor
+@Builder
 @Getter
 @Setter
 @ToString
+@Document(collection = "books")
 public class Book {
-
     @Id
     private String id;
 
@@ -22,21 +22,31 @@ public class Book {
 
     private List<String> authors;
 
-    private String publisher;
+    private String genre;
 
-    private List<String> genres;
+    private double price;
 
     private String description;
 
-    private String ISBN;
+    private List<String> formats;
 
     private String publicationDate;
 
-    private String price;
+    private List<Rating> ratings;
 
-    private String abstractInfo;
+    private String publisher;
+
+    private String ISBN;
 
     private String language;
 
     private Integer pages;
+
+    private Integer available;
+
+    private Integer sold;
+
+    private String imageLink;
+
+    private String fileLink;
 }
