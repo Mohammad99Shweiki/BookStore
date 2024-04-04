@@ -75,6 +75,15 @@ public class StoreServiceImpl implements StoreService {
         order.setDate(LocalDate.now());
         order.setItems(user.getCart());
 
+        order.getItems()
+                .forEach(item -> {
+                    Book book = bookRepository.findById(item.getBookId())
+                            .orElseThrow(() -> new ObjectNotFoundException(item.getBookId()));
+                    int quantitySold = item.getQuantity();
+                    book.setSold(book.getSold() + quantitySold);
+                    bookRepository.save(book);
+                });
+
         user.getOrders().add(order);
         user.getCart().clear();
         userRepository.save(user);

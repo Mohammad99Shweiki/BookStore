@@ -15,7 +15,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public User getUserById(String userId) {
         return userRepository.findById(userId)
-                .orElseThrow(() -> new ObjectNotFoundException("User not found with ID: " + userId));
+                .orElseThrow(() -> new ObjectNotFoundException(userId));
     }
 
     @Override
@@ -31,7 +31,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public User updateUser(String userId, User user) {
         User existingUser = userRepository.findById(userId)
-                .orElseThrow(() -> new ObjectNotFoundException("User not found with ID: " + userId));
+                .orElseThrow(() -> new ObjectNotFoundException(userId));
         existingUser.setUsername(user.getUsername());
         existingUser.setEmail(user.getEmail());
         existingUser.setPassword(user.getPassword());
@@ -44,7 +44,7 @@ public class UserServiceImpl implements UserService {
         if (userRepository.existsById(userId)) {
             userRepository.deleteById(userId);
         } else {
-            throw new ObjectNotFoundException("User not found with ID: " + userId);
+            throw new ObjectNotFoundException(userId);
         }
     }
 }
