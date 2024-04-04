@@ -50,7 +50,6 @@ public class StoreServiceImpl implements StoreService {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new ObjectNotFoundException(userId));
 
-        // Assuming the user's cart is a list of CartItem objects
         user.getCart().removeIf(item -> item.getBookId().equals(bookId));
 
         userRepository.save(user);
