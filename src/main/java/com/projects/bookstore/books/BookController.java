@@ -28,11 +28,17 @@ public class BookController {
         return bookOptional
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
-    }   
+    }
 
     @GetMapping("/search")
     public ResponseEntity<Set<Book>> searchBooks(@RequestParam String search) {
         Set<Book> books = bookService.searchBooks(search);
+        return ResponseEntity.ok(books);
+    }
+
+    @GetMapping("/purchased/{userId}")
+    public ResponseEntity<Set<Book>> getBooksPurchasedBy(@PathVariable String userId) throws Exception {
+        Set<Book> books = bookService.getBooksPurchasedBy(userId);
         return ResponseEntity.ok(books);
     }
 

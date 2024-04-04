@@ -9,6 +9,8 @@ public interface BookService {
 
     Set<Book> searchBooks(String search);
 
+    Set<Book> getBooksPurchasedBy(String userId) throws Exception;
+
     Optional<Book> getBookById(String id);
 
     String addBook(Book book);

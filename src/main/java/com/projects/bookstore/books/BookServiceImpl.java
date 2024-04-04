@@ -1,5 +1,9 @@
 package com.projects.bookstore.books;
 
+import com.projects.bookstore.common.exceptions.ObjectNotFoundException;
+import com.projects.bookstore.users.User;
+import com.projects.bookstore.users.UserRepository;
+import com.projects.bookstore.users.order.CartItem;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -8,6 +12,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 
 @Service
@@ -15,6 +20,8 @@ import java.util.Set;
 public class BookServiceImpl implements BookService {
 
     private final BookRepository bookRepository;
+
+    private final UserRepository userRepository;
 
     @Override
     @Transactional
@@ -26,6 +33,22 @@ public class BookServiceImpl implements BookService {
     @Transactional
     public Set<Book> searchBooks(String search) {
         return new HashSet<>(bookRepository.findByTitleContaining(search));
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public Set<Book> getBooksPurchasedBy(String userId) throws ObjectNotFoundException {
+        Optional<User> userOptional = userRepository.findByUserId(userId);
+
+        if (userOptional.isPresent()) {
+            User user = userOptional.get();
+            Set<String> bookIds = user.getOrders().stream()
+                    .flatMap(order -> order.getItems().stream().map(CartItem::getBookId))
+                    .collect(Collectors.toSet());
+            return new HashSet<>(bookRepository.findAll(bookIds));
+        } else {
+            throw new ObjectNotFoundException(userId);
+        }
     }
 
     @Override
