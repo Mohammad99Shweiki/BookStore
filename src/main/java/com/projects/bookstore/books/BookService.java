@@ -13,10 +13,12 @@ public interface BookService {
 
     Optional<Book> getBookById(String id);
 
-    String addBook(Book book);
+    String addBook(BookDTO book);
 
     String updateBook(String id, Book book);
 
     void deleteBook(String id);
+
+    void deleteAll();
 }
 

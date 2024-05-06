@@ -1,5 +1,8 @@
 package com.projects.bookstore.users;
 
+import com.projects.bookstore.books.BookDTO;
+
+import java.io.IOException;
 import java.util.List;
 
 public interface UserService {
@@ -7,9 +10,11 @@ public interface UserService {
 
     List<User> getAllUsers();
 
-    User createUser(User user);
+    User createUser(UserDTO user);
 
     User updateUser(String userId, User user);
 
     void deleteUser(String userId);
+
+    List<BookDTO> RecommendBooks(String userId) throws IOException;
 }

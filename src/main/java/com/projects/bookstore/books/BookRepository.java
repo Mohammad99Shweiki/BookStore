@@ -1,11 +1,13 @@
 package com.projects.bookstore.books;
 
-import org.springframework.data.mongodb.repository.MongoRepository;
+
+import org.springframework.data.elasticsearch.repository.ElasticsearchRepository;
 
 import java.util.List;
 
-public interface BookRepository extends MongoRepository<Book, String> {
+public interface BookRepository extends ElasticsearchRepository<Book, String> {
     List<Book> findByTitleContaining(String title);
 
-    List<Book> findAllById(Iterable<String> ids);
+//    todo fix
+//    List<Book> findAllById(Iterable<String> ids);
 }

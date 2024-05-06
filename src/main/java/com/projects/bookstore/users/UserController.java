@@ -1,10 +1,12 @@
 package com.projects.bookstore.users;
 
+import com.projects.bookstore.books.BookDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
 import java.util.List;
 
 @RestController
@@ -20,6 +22,12 @@ public class UserController {
         return ResponseEntity.ok(user);
     }
 
+    @GetMapping("/recommend/{userId}")
+    public ResponseEntity<List<BookDTO>> recommendUser(@PathVariable String userId) throws IOException {
+        List<BookDTO> books = userService.RecommendBooks(userId);
+        return ResponseEntity.ok(books);
+    }
+
     @GetMapping
     public ResponseEntity<List<User>> getAllUsers() {
         List<User> users = userService.getAllUsers();
@@ -27,8 +35,8 @@ public class UserController {
     }
 
     @PostMapping
-    public ResponseEntity<User> createUser(@RequestBody User user) {
-        User createdUser = userService.createUser(user);
+    public ResponseEntity<String> createUser(@RequestBody UserDTO user) {
+        String createdUser = userService.createUser(user).getUserId();
         return ResponseEntity.status(HttpStatus.CREATED).body(createdUser);
     }
 

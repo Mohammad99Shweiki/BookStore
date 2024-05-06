@@ -43,7 +43,7 @@ public class BookController {
     }
 
     @PostMapping("/")
-    public ResponseEntity<String> addBook(@RequestBody Book newBook) {
+    public ResponseEntity<String> addBook(@RequestBody BookDTO newBook) {
         String bookId = bookService.addBook(newBook);
         return ResponseEntity.status(HttpStatus.CREATED).body(bookId);
     }
@@ -57,6 +57,12 @@ public class BookController {
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteBook(@PathVariable String id) {
         bookService.deleteBook(id);
+        return ResponseEntity.noContent().build();
+    }
+
+    @DeleteMapping("/all")
+    public ResponseEntity<Void> deleteAll() {
+        bookService.deleteAll();
         return ResponseEntity.noContent().build();
     }
 }

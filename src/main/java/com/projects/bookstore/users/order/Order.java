@@ -24,4 +24,8 @@ public class Order {
     private String shippingAddress;
 
     private String status;
+
+    private String address;
+
+    private String phoneNo;
 }

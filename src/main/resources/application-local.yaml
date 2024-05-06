@@ -1,9 +1,12 @@
 server:
   port: 8080
 spring:
+  elasticsearch:
+    uris: "localhost:9200"
+    username: elastic
+    password: 0ZQ9hNjmAyO7oa8ruQxl
   data:
-    mongodb:
-      host: localhost
-      port: 27017
-      database: book_store
+    elasticsearch:
+      repositories:
+        enabled: true
 
