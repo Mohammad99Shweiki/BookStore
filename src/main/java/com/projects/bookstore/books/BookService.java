@@ -3,23 +3,22 @@ package com.projects.bookstore.books;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
-import java.util.Optional;
 import java.util.Set;
 
 public interface BookService {
-    Page<Book> getAllBooks(Pageable pageable);
+    Page<Book> getAll(Pageable pageable);
 
-    Set<Book> searchBooks(String search);
+    Page<Book> searchBooks(String search, Pageable pageable);
 
     Set<Book> getBooksPurchasedBy(String userId) throws Exception;
 
-    Optional<Book> getBookById(String id);
+    Book getById(String id);
 
-    String addBook(Book book);
+    String save(Book book);
 
-    String updateBook(String id, Book book);
+    String update(String id, Book book);
 
-    void deleteBook(String id);
+    void delete(String id);
 
     void deleteAll();
 }

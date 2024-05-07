@@ -6,7 +6,7 @@ import com.projects.bookstore.books.Book;
 import java.io.IOException;
 import java.util.List;
 
-public interface NLPService {
+public interface RecommendationService {
 
     List<Float> embedText(String text);
 

@@ -1,7 +1,7 @@
 package com.projects.bookstore.books;
 
 import com.projects.bookstore.common.exceptions.ObjectNotFoundException;
-import com.projects.bookstore.recommendation.NLPService;
+import com.projects.bookstore.recommendation.RecommendationService;
 import com.projects.bookstore.users.User;
 import com.projects.bookstore.users.UserRepository;
 import com.projects.bookstore.users.order.CartItem;
@@ -17,26 +17,24 @@ import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
-//todo change all methods to return bookdto
 public class BookServiceImpl implements BookService {
 
     private final BookRepository bookRepository;
 
     private final UserRepository userRepository;
 
-    private final NLPService NLPService;
+    private final RecommendationService RecommendationService;
 
     @Override
     @Transactional
-    public Page<Book> getAllBooks(Pageable pageable) {
+    public Page<Book> getAll(Pageable pageable) {
         return bookRepository.findAll(pageable);
     }
 
     @Override
     @Transactional
-    //todo limit output or return page
-    public Set<Book> searchBooks(String search) {
-        return new HashSet<>(bookRepository.findByTitleContaining(search));
+    public Page<Book> searchBooks(String search, Pageable pageable) {
+        return (bookRepository.findByTitleContaining(search, pageable));
     }
 
     @Override
@@ -57,20 +55,20 @@ public class BookServiceImpl implements BookService {
 
     @Override
     @Transactional
-    public Optional<Book> getBookById(String id) {
-        return bookRepository.findById(id);
+    public Book getById(String id) {
+        return bookRepository.findById(id).orElseThrow(() -> new ObjectNotFoundException(id));
     }
 
     @Override
     @Transactional
-    public String addBook(Book book) {
+    public String save(Book book) {
         updateEmbedding(book);
         return bookRepository.save(book).getIsbn();
     }
 
     @Override
     @Transactional
-    public String updateBook(String id, Book book) {
+    public String update(String id, Book book) {
         Book existingBook = bookRepository.findById(id).orElse(null);
         if (existingBook != null) {
             if (book.getTitle() != null) {
@@ -130,7 +128,7 @@ public class BookServiceImpl implements BookService {
 
     @Override
     @Transactional
-    public void deleteBook(String id) {
+    public void delete(String id) {
         bookRepository.deleteById(id);
     }
 
@@ -140,7 +138,7 @@ public class BookServiceImpl implements BookService {
     }
 
     private void updateEmbedding(Book book) {
-        List<Float> embedding = NLPService.embedText(book.getDescription());
+        List<Float> embedding = RecommendationService.embedText(book.getDescription());
         book.setEmbedding(embedding);
     }
 }

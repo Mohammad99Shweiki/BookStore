@@ -3,8 +3,6 @@ package com.projects.bookstore.recommendation;
 import co.elastic.clients.elasticsearch.ElasticsearchClient;
 import co.elastic.clients.elasticsearch.core.KnnSearchResponse;
 import co.elastic.clients.elasticsearch.core.knn_search.KnnSearchQuery;
-import com.fasterxml.jackson.core.JsonParser;
-import com.fasterxml.jackson.core.util.JsonParserDelegate;
 import com.projects.bookstore.books.Book;
 import com.projects.bookstore.common.EmbeddingRequestBody;
 import lombok.RequiredArgsConstructor;
@@ -16,7 +14,7 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
-public class NLPServiceImpl implements NLPService {
+public class RecommendationServiceImpl implements RecommendationService {
 
     private final ElasticsearchClient client;
 

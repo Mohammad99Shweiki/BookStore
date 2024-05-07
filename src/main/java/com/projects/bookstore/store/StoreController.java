@@ -1,6 +1,5 @@
 package com.projects.bookstore.store;
 
-import com.projects.bookstore.store.StoreService;
 import com.projects.bookstore.users.order.Order;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -15,10 +14,22 @@ public class StoreController {
     @Autowired
     private StoreService storeService;
 
-    @PostMapping("/addToCart/{userId}/{bookId}/{quantity}")
+    @PostMapping("/{userId}/{bookId}/{quantity}")
     public ResponseEntity<Void> addToCart(@PathVariable String userId, @PathVariable String bookId, @PathVariable int quantity) {
         storeService.addToCart(userId, bookId, quantity);
         return ResponseEntity.ok().build();
+    }
+
+    @DeleteMapping("/{userId}/{bookId}")
+    public ResponseEntity<Void> removeFromCart(@PathVariable String userId, @PathVariable String bookId) {
+        storeService.removeFromCart(userId, bookId);
+        return ResponseEntity.noContent().build();
+    }
+
+    @DeleteMapping("/{userId}")
+    public ResponseEntity<Void> clearCart(@PathVariable String userId) {
+        storeService.clearCart(userId);
+        return ResponseEntity.noContent().build();
     }
 
     @PostMapping("/purchaseCart/{userId}")
