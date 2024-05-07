@@ -1,5 +1,6 @@
 package com.projects.bookstore.books;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import lombok.*;
@@ -22,8 +23,9 @@ import java.util.List;
 @JsonSerialize
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Book {
+
     @Id
-    private String id;
+    private String isbn;
 
     private String title;
 
@@ -43,7 +45,6 @@ public class Book {
 
     private String publisher;
 
-    private String isbn;
 
     private String language;
 
@@ -58,5 +59,6 @@ public class Book {
     private String fileLink;
 
     @Field(type = FieldType.Dense_Vector, store = true, dims = 384)
+    @JsonIgnore
     private List<Float> embedding;
 }

@@ -1,6 +1,8 @@
 package com.projects.bookstore.books;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -17,8 +19,8 @@ public class BookController {
     private final BookService bookService;
 
     @GetMapping
-    public ResponseEntity<List<Book>> getAllBooks() {
-        List<Book> books = bookService.getAllBooks();
+    public ResponseEntity<Page<Book>> getAllBooks(Pageable pageable) {
+        Page<Book> books = bookService.getAllBooks(pageable);
         return ResponseEntity.ok(books);
     }
 
@@ -43,7 +45,7 @@ public class BookController {
     }
 
     @PostMapping("/")
-    public ResponseEntity<String> addBook(@RequestBody BookDTO newBook) {
+    public ResponseEntity<String> addBook(@RequestBody Book newBook) {
         String bookId = bookService.addBook(newBook);
         return ResponseEntity.status(HttpStatus.CREATED).body(bookId);
     }

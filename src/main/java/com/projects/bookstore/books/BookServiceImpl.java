@@ -6,16 +6,18 @@ import com.projects.bookstore.users.User;
 import com.projects.bookstore.users.UserRepository;
 import com.projects.bookstore.users.order.CartItem;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
 import java.util.stream.Collectors;
-import java.util.stream.StreamSupport;
 
 
 @Service
 @RequiredArgsConstructor
+//todo change all methods to return bookdto
 public class BookServiceImpl implements BookService {
 
     private final BookRepository bookRepository;
@@ -26,14 +28,13 @@ public class BookServiceImpl implements BookService {
 
     @Override
     @Transactional
-    public List<Book> getAllBooks() {
-        Iterable<Book> iterable = bookRepository.findAll();
-        return StreamSupport.stream(iterable.spliterator(), false)
-                .collect(Collectors.toList());
+    public Page<Book> getAllBooks(Pageable pageable) {
+        return bookRepository.findAll(pageable);
     }
 
     @Override
     @Transactional
+    //todo limit output or return page
     public Set<Book> searchBooks(String search) {
         return new HashSet<>(bookRepository.findByTitleContaining(search));
     }
@@ -62,11 +63,9 @@ public class BookServiceImpl implements BookService {
 
     @Override
     @Transactional
-    //todo specify type of exception
-    public String addBook(BookDTO bookDTO) {
-        Book book = BookMapper.fromDto(bookDTO);
+    public String addBook(Book book) {
         updateEmbedding(book);
-        return bookRepository.save(book).getId();
+        return bookRepository.save(book).getIsbn();
     }
 
     @Override
@@ -123,7 +122,7 @@ public class BookServiceImpl implements BookService {
             if (book.getAwards() != null && !book.getAwards().isEmpty()) {
                 existingBook.getAwards().addAll(book.getAwards());
             }
-            return bookRepository.save(existingBook).getId();
+            return bookRepository.save(existingBook).getIsbn();
         }
         return null;
     }

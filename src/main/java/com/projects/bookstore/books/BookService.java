@@ -1,11 +1,13 @@
 package com.projects.bookstore.books;
 
-import java.util.List;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+
 import java.util.Optional;
 import java.util.Set;
 
 public interface BookService {
-    List<Book> getAllBooks();
+    Page<Book> getAllBooks(Pageable pageable);
 
     Set<Book> searchBooks(String search);
 
@@ -13,7 +15,7 @@ public interface BookService {
 
     Optional<Book> getBookById(String id);
 
-    String addBook(BookDTO book);
+    String addBook(Book book);
 
     String updateBook(String id, Book book);
 
