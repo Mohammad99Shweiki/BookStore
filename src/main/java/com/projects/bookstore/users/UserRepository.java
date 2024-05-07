@@ -14,6 +14,10 @@ public interface UserRepository extends ElasticsearchRepository<User, String> {
 
     Boolean existsByUsername(String username);
 
+    Optional<User> findByEmail(String email);
+
+    Optional<User> findByUsername(String username);
+
     Boolean existsByEmail(String username);
 
     Optional<User> findByUserId(String userId);
