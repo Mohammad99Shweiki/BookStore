@@ -9,11 +9,11 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.elasticsearch.annotations.Document;
 import org.springframework.data.elasticsearch.annotations.Field;
 import org.springframework.data.elasticsearch.annotations.FieldType;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -22,7 +22,7 @@ import java.util.Set;
 @Setter
 @ToString
 @Document(indexName = "users")
-public class User {
+public class User implements UserDetails {
     @Id
     private String userId;
 
@@ -35,18 +35,19 @@ public class User {
     @Email
     private String email;
 
-    //todo hash
+    @JsonIgnore
     private String password;
 
-    private List<String> wishlist = new ArrayList<>();
+    private Set<String> wishlist;
 
-    private Set<CartItem> cart = new HashSet<>();
+    private Set<CartItem> cart;
 
-    private Set<Order> orders = new HashSet<>();
+    private Set<Order> orders;
 
+    @JsonIgnore
     private UserRole role;
 
-    List<String> favoriteGenres = new ArrayList<>();
+    Set<String> favoriteGenres = new HashSet<>();
 
     @Field(type = FieldType.Dense_Vector, store = true, dims = 384)
     @JsonIgnore
@@ -60,4 +61,16 @@ public class User {
 
     @Builder.Default
     private boolean credentialsNonExpired = true;
+
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        List<SimpleGrantedAuthority> simpleGrantedAuthorityList = new ArrayList<>();
+        simpleGrantedAuthorityList.add(new SimpleGrantedAuthority("CUSTOMER"));
+        return simpleGrantedAuthorityList;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return true;
+    }
 }

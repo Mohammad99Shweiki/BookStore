@@ -10,3 +10,12 @@ spring:
       repositories:
         enabled: true
 
+bezkoder:
+  app:
+    jwtSecret: ======================BezKoder=Spring===========================
+    jwtExpirationMs: 86400000
+
+logging:
+  level:
+    org:
+      springframework: INFO

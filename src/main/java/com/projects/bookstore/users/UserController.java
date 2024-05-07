@@ -1,6 +1,6 @@
 package com.projects.bookstore.users;
 
-import com.projects.bookstore.books.BookDTO;
+import com.projects.bookstore.books.Book;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -23,8 +23,8 @@ public class UserController {
     }
 
     @GetMapping("/recommend/{userId}")
-    public ResponseEntity<List<BookDTO>> recommendUser(@PathVariable String userId) throws IOException {
-        List<BookDTO> books = userService.RecommendBooks(userId);
+    public ResponseEntity<List<Book>> recommendUser(@PathVariable String userId) throws IOException {
+        List<Book> books = userService.RecommendBooks(userId);
         return ResponseEntity.ok(books);
     }
 
@@ -35,14 +35,14 @@ public class UserController {
     }
 
     @PostMapping
-    public ResponseEntity<String> createUser(@RequestBody UserDTO user) {
+    public ResponseEntity<String> createUser(@RequestBody User user) {
         String createdUser = userService.createUser(user).getUserId();
         return ResponseEntity.status(HttpStatus.CREATED).body(createdUser);
     }
 
     @PutMapping("/{userId}")
-    public ResponseEntity<User> updateUser(@PathVariable String userId, @RequestBody User user) {
-        User updatedUser = userService.updateUser(userId, user);
+    public ResponseEntity<String> updateUser(@PathVariable String userId, @RequestBody User user) {
+        String updatedUser = userService.updateUser(userId, user);
         return ResponseEntity.ok(updatedUser);
     }
 
