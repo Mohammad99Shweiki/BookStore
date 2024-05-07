@@ -47,32 +47,13 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-//        http.csrf(csrf -> csrf.disable())
-//                .exceptionHandling(exception -> exception.authenticationEntryPoint(unauthorizedHandler))
-//                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-//                .authorizeHttpRequests(auth ->
-//                        auth.requestMatchers("/api/auth/signup").permitAll()
-//                                .requestMatchers("/api/auth/**").permitAll()
-//                                .requestMatchers("/api/play/new-game").permitAll()
-//                                .anyRequest().authenticated()
-//                )
-//                .httpBasic().disable()
-//                .formLogin().disable()
-//                .anonymous().disable();
-//
-//        http.authenticationProvider(authenticationProvider());
-//
-//        http.addFilterBefore(authTokenFilter, UsernamePasswordAuthenticationFilter.class);
-//
-//        return http.build();
-
         http
                 .csrf()
                 .disable()
                 .headers().frameOptions().sameOrigin()
                 .and()
                 .authorizeHttpRequests()
-                .requestMatchers("/auth/**", "/play/**", "/auth/logout", "swagger-ui/**", "swagger-ui**", "/v3/api-docs/**", "/v3/api-docs**", "/books/**")
+                .requestMatchers("/auth/**", "/play/**", "/auth/logout", "swagger-ui/**", "swagger-ui**", "/v3/api-docs/**", "/v3/api-docs**")
                 .permitAll()
                 .anyRequest()
                 .authenticated()
