@@ -4,7 +4,6 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import lombok.*;
-import org.elasticsearch.search.DocValueFormat;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.elasticsearch.annotations.Document;
 import org.springframework.data.elasticsearch.annotations.Field;
@@ -45,7 +44,6 @@ public class Book {
 
     private String publisher;
 
-
     private String language;
 
     private Integer pages;
@@ -61,4 +59,9 @@ public class Book {
     @Field(type = FieldType.Dense_Vector, store = true, dims = 384)
     @JsonIgnore
     private List<Float> embedding;
+
+    private Boolean onSale;
+
+    private Float salePrice;
+
 }
