@@ -6,6 +6,7 @@ import co.elastic.clients.elasticsearch.core.knn_search.KnnSearchQuery;
 import com.projects.bookstore.books.Book;
 import com.projects.bookstore.common.EmbeddingRequestBody;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
@@ -18,15 +19,16 @@ public class RecommendationServiceImpl implements RecommendationService {
 
     private final ElasticsearchClient client;
 
-    //todo add url for config
+    @Value("${model.url}")
+    private String modelUrl;
+
     @Override
     public List embedText(String text) {
-        String url = "http://localhost:9090/embed_text";
         RestTemplate restTemplate = new RestTemplate();
         EmbeddingRequestBody requestBody = EmbeddingRequestBody.builder()
                 .content(text)
                 .build();
-        return restTemplate.postForObject(url, requestBody, List.class);
+        return restTemplate.postForObject(modelUrl, requestBody, List.class);
     }
 
     @Override

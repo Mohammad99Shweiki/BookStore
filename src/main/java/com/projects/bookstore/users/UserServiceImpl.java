@@ -47,7 +47,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     }
 
     @Override
-    //todo make another endpoint and method to order change password -- do it with authorization
+    //todo make another endpoint and method to order change password and another one for the role -- do it with authorization
     public String update(String userId, User user) {
         User existingUser = userRepository.findById(userId)
                 .orElseThrow(() -> new ObjectNotFoundException(userId));
@@ -66,9 +66,6 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         }
         if (user.getLastName() != null) {
             existingUser.setLastName(user.getLastName());
-        }
-        if (user.getRole() != null) {
-            existingUser.setRole(user.getRole());
         }
         if (user.getWishlist() != null) {
             existingUser.setWishlist(user.getWishlist());
@@ -91,12 +88,13 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         }
     }
 
-    //todo put names in configuration instead of hard coding names
     @Override
     public List<Book> recommendBooks(String userId) throws IOException {
         User user = getById(userId);
-        //todo throw exception when empty
         List<Float> userEmbedding = user.getEmbedding();
+        if (userEmbedding.isEmpty()) {
+            throw new RuntimeException("make sure the user has favorite genres before ordering recommendation");
+        }
         KnnSearchResponse<Book> queryResult = recommendationService.knnQuery(userEmbedding);
         return queryResult.hits().hits().stream()
                 .sorted((a, b) -> Objects.requireNonNull(b.score()).compareTo(Objects.requireNonNull(a.score())))
