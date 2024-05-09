@@ -1,6 +1,5 @@
 package com.projects.bookstore.config;
 
-import com.projects.bookstore.users.UserRole;
 import jakarta.validation.constraints.NotBlank;
 import lombok.Getter;
 import lombok.Setter;
@@ -9,7 +8,7 @@ import lombok.Setter;
 @Setter
 public class LoginRequest {
     @NotBlank
-    private String email;
+    private String username;
 
     @NotBlank
     private String password;

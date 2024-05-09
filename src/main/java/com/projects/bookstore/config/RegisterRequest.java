@@ -9,15 +9,13 @@ import jakarta.validation.constraints.Size;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
-import org.w3c.dom.stylesheets.LinkStyle;
 
-import java.util.List;
 import java.util.Set;
 
 @Getter
 @Setter
 @Builder
-public class SignupRequest {
+public class RegisterRequest {
     @NotBlank
     @Size(min = 3, max = 20)
     private String username;
