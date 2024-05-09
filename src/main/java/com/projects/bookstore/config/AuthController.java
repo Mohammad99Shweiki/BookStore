@@ -46,6 +46,7 @@ public class AuthController {
         return ResponseEntity.ok(JwtResponse.builder()
                 .id(userDetails.getUserId())
                 .token(jwt)
+                .username(userDetails.getUsername())
                 .email(userDetails.getEmail())
                 .role(userDetails.getRole())
                 .build());
