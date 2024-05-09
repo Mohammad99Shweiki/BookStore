@@ -1,5 +1,6 @@
 package com.projects.bookstore.books;
 
+import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -41,6 +42,12 @@ public class BookController {
         return ResponseEntity.ok(books);
     }
 
+    @GetMapping("/onSale")
+    public ResponseEntity<Page<Book>> getOnSale(Pageable pageable) {
+        Page<Book> books = bookService.getOnSale(pageable);
+        return ResponseEntity.ok(books);
+    }
+
     @PostMapping("/")
     public ResponseEntity<String> add(@RequestBody Book newBook) {
         String bookId = bookService.save(newBook);
@@ -51,6 +58,12 @@ public class BookController {
     public ResponseEntity<String> update(@PathVariable String id, @RequestBody Book updatedBook) {
         String bookId = bookService.update(id, updatedBook);
         return ResponseEntity.of(Optional.ofNullable(bookId));
+    }
+
+    @PutMapping("/sale")
+    public ResponseEntity<String> saleOffer(@RequestBody @NotNull SaleRequest saleRequest) {
+        String bookId = bookService.saleOffer(saleRequest);
+        return ResponseEntity.ok(bookId);
     }
 
     @DeleteMapping("/{id}")

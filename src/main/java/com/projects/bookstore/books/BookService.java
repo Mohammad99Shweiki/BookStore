@@ -14,9 +14,13 @@ public interface BookService {
 
     Book getById(String id);
 
+    Page<Book> getOnSale(Pageable pageable);
+
     String save(Book book);
 
     String update(String id, Book book);
+
+    String saleOffer(SaleRequest saleRequest);
 
     void delete(String id);
 

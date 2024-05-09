@@ -60,6 +60,11 @@ public class BookServiceImpl implements BookService {
     }
 
     @Override
+    public Page<Book> getOnSale(Pageable pageable) {
+        return bookRepository.findByOnSaleIsTrue(pageable);
+    }
+
+    @Override
     @Transactional
     public String save(Book book) {
         updateEmbedding(book);
@@ -123,6 +128,17 @@ public class BookServiceImpl implements BookService {
             return bookRepository.save(existingBook).getIsbn();
         }
         return null;
+    }
+
+    @Override
+    public String saleOffer(SaleRequest saleRequest) {
+        Book book = getById(saleRequest.getBookId());
+        if (saleRequest.getSalePrice() >= book.getPrice()) {
+            throw new RuntimeException("the sale price should be lower than actual price");
+        }
+        book.setOnSale(true);
+        book.setSalePrice(saleRequest.getSalePrice());
+        return bookRepository.save(book).getIsbn();
     }
 
 
