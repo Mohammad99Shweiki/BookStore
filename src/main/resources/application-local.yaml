@@ -2,8 +2,8 @@ server:
   port: 8080
 spring:
   elasticsearch:
-    uris: "localhost:9200"
-    username: elastic
+    uris: "https://e6b49034e8594494a6fd75f75c5d7aca.us-central1.gcp.cloud.es.io:443"
+    username: book_store
     password: 0ZQ9hNjmAyO7oa8ruQxl
   data:
     elasticsearch:

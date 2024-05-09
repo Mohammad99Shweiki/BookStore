@@ -49,7 +49,7 @@ public class User implements UserDetails {
 
     Set<String> favoriteGenres = new HashSet<>();
 
-    @Field(type = FieldType.Dense_Vector, store = true, dims = 384)
+    @Field(type = FieldType.Dense_Vector, dims = 384)
     @JsonIgnore
     private List<Float> embedding;
 
