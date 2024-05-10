@@ -18,7 +18,7 @@ public class BookController {
 
     private final BookService bookService;
 
-    @GetMapping
+    @GetMapping("")
     public ResponseEntity<Page<Book>> getAll(Pageable pageable) {
         Page<Book> books = bookService.getAll(pageable);
         return ResponseEntity.ok(books);
