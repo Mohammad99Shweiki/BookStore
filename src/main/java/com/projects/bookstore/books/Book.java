@@ -3,6 +3,7 @@ package com.projects.bookstore.books;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import jakarta.validation.constraints.NotNull;
 import lombok.*;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.elasticsearch.annotations.Document;
@@ -32,7 +33,8 @@ public class Book {
 
     private List<String> genres = new ArrayList<>();
 
-    private Float price;
+    @NotNull
+    private Float price = Float.parseFloat("0");
 
     private String description;
 
@@ -46,11 +48,12 @@ public class Book {
 
     private String language;
 
+    @NotNull
     private Integer pages;
 
-    private Integer available;
+    private Integer available = 0;
 
-    private Integer sold;
+    private Integer sold = 0;
 
     private String imageLink;
 

@@ -1,7 +1,7 @@
 package com.projects.bookstore.users;
 
 import com.projects.bookstore.books.Book;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -11,10 +11,11 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/users")
+@CrossOrigin("*")
+@RequiredArgsConstructor
 public class UserController {
 
-    @Autowired
-    private UserService userService;
+    private final UserService userService;
 
     @GetMapping("/{userId}")
     public ResponseEntity<User> getById(@PathVariable String userId) {
