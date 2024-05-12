@@ -3,6 +3,7 @@ package com.projects.bookstore.recommendation;
 import co.elastic.clients.elasticsearch.ElasticsearchClient;
 import co.elastic.clients.elasticsearch.core.KnnSearchResponse;
 import co.elastic.clients.elasticsearch.core.knn_search.KnnSearchQuery;
+import co.elastic.clients.elasticsearch.core.search.Hit;
 import com.projects.bookstore.books.Book;
 import com.projects.bookstore.common.EmbeddingRequestBody;
 import lombok.RequiredArgsConstructor;
@@ -12,6 +13,7 @@ import org.springframework.web.client.RestTemplate;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Objects;
 
 @Service
 @RequiredArgsConstructor
@@ -32,14 +34,20 @@ public class RecommendationServiceImpl implements RecommendationService {
     }
 
     @Override
-    public KnnSearchResponse<Book> knnQuery(List<Float> embedding) throws IOException {
-        return client.knnSearch(s -> s.index("books")
+    public List<Book> knnQuery(List<Float> embedding) throws IOException {
+        KnnSearchResponse<Book> response = client.knnSearch(s -> s.index("books")
                 .knn(KnnSearchQuery.of(
                         query -> query
                                 .numCandidates(50)
-                                .k(5)
+                                .k(10)
                                 .field("embedding")
                                 .queryVector(embedding)
                 )), Book.class);
+
+        return response.hits().hits().stream()
+                .sorted((a, b) -> Objects.requireNonNull(b.score()).compareTo(Objects.requireNonNull(a.score())))
+                .map(Hit::source)
+                .filter(Objects::nonNull)
+                .toList();
     }
 }

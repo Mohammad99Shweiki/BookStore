@@ -1,7 +1,5 @@
 package com.projects.bookstore.users;
 
-import co.elastic.clients.elasticsearch.core.KnnSearchResponse;
-import co.elastic.clients.elasticsearch.core.search.Hit;
 import com.projects.bookstore.books.Book;
 import com.projects.bookstore.common.exceptions.ObjectNotFoundException;
 import com.projects.bookstore.recommendation.RecommendationService;
@@ -14,7 +12,6 @@ import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
@@ -95,12 +92,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         if (userEmbedding.isEmpty()) {
             throw new RuntimeException("make sure the user has favorite genres before ordering recommendation");
         }
-        KnnSearchResponse<Book> queryResult = recommendationService.knnQuery(userEmbedding);
-        return queryResult.hits().hits().stream()
-                .sorted((a, b) -> Objects.requireNonNull(b.score()).compareTo(Objects.requireNonNull(a.score())))
-                .map(Hit::source)
-                .filter(Objects::nonNull)
-                .toList();
+        return recommendationService.knnQuery(userEmbedding);
     }
 
     @Override

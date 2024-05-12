@@ -3,6 +3,8 @@ package com.projects.bookstore.books;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
+import java.io.IOException;
+import java.util.List;
 import java.util.Set;
 
 public interface BookService {
@@ -11,6 +13,8 @@ public interface BookService {
     Page<Book> searchBooks(String search, Pageable pageable);
 
     Set<Book> getBooksPurchasedBy(String userId) throws Exception;
+
+    List<Book> getSimilar(String id) throws IOException;
 
     Book getById(String id);
 

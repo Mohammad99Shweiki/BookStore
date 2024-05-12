@@ -11,6 +11,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.io.IOException;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -23,7 +24,7 @@ public class BookServiceImpl implements BookService {
 
     private final UserRepository userRepository;
 
-    private final RecommendationService RecommendationService;
+    private final RecommendationService recommendationService;
 
     @Override
     @Transactional
@@ -51,6 +52,18 @@ public class BookServiceImpl implements BookService {
         } else {
             throw new ObjectNotFoundException(userId);
         }
+    }
+
+    @Override
+    public List<Book> getSimilar(String id) throws IOException {
+        Book book = bookRepository.findById(id)
+                .orElseThrow(() -> new ObjectNotFoundException(id));
+        List<Float> embedding = book.getEmbedding();
+        return recommendationService.knnQuery(embedding)
+                .stream().filter(
+                        bookObject -> !Objects.equals(bookObject.getTitle(), book.getTitle())
+                )
+                .collect(Collectors.toList());
     }
 
     @Override
@@ -154,7 +167,7 @@ public class BookServiceImpl implements BookService {
     }
 
     private void updateEmbedding(Book book) {
-        List<Float> embedding = RecommendationService.embedText(book.getDescription());
+        List<Float> embedding = recommendationService.embedText(book.getDescription());
         book.setEmbedding(embedding);
     }
 }

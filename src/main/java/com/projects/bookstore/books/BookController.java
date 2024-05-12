@@ -8,6 +8,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
+import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
@@ -29,6 +31,12 @@ public class BookController {
     public ResponseEntity<Book> getById(@PathVariable String id) {
         Book book = bookService.getById(id);
         return ResponseEntity.ok(book);
+    }
+
+    @GetMapping("/similar/{id}")
+    public ResponseEntity<List<Book>> getSimilar(@PathVariable String id) throws IOException {
+        List<Book> similarBooks = bookService.getSimilar(id);
+        return ResponseEntity.ok(similarBooks);
     }
 
     @GetMapping("/search")
