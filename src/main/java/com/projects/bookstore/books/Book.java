@@ -63,7 +63,7 @@ public class Book {
     @JsonIgnore
     private List<Float> embedding;
 
-    private Boolean onSale;
+    private Boolean onSale = Boolean.FALSE;
 
     private Float salePrice;
 

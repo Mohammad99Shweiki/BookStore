@@ -34,8 +34,9 @@ public class BookServiceImpl implements BookService {
 
     @Override
     @Transactional
-    public Page<Book> searchBooks(String search, Pageable pageable) {
-        return (bookRepository.findByTitleContaining(search, pageable));
+    public List<Book> searchBooks(String search) throws IOException {
+        List<Float> embedding = recommendationService.embedText(search);
+        return recommendationService.knnQuery(embedding);
     }
 
     @Override

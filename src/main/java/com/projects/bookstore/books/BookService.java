@@ -10,7 +10,7 @@ import java.util.Set;
 public interface BookService {
     Page<Book> getAll(Pageable pageable);
 
-    Page<Book> searchBooks(String search, Pageable pageable);
+    List<Book> searchBooks(String search) throws IOException;
 
     Set<Book> getBooksPurchasedBy(String userId) throws Exception;
 
