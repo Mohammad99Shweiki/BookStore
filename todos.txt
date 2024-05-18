@@ -1,0 +1,18 @@
+add dtos and mappers where necessary --
+response fto for recommendation
+revise the project structure
+make script to add books from csv
+check for more consistency in naming methods
+missing endpoints in store service
+when a purchase is made, add genres of purchase to the embedding of user preferences
+
+work on frontend and finish it
+adding authorization
+fix controllers by changing retrieved types from list to page where necessary
+best-selling authors
+sales categorized based on categories -like ranking
+
+reformatting in the future and fix constants by putting them in configs
+logger
+Junit
+integration testing
