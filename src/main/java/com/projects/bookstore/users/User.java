@@ -38,11 +38,11 @@ public class User implements UserDetails {
     @JsonIgnore
     private String password;
 
-    private Set<String> wishlist;
+    private Set<String> wishlist = new HashSet<>();
 
-    private Set<CartItem> cart;
+    private Set<CartItem> cart = new HashSet<>();
 
-    private Set<Order> orders;
+    private Set<Order> orders = new HashSet<>();
 
     @JsonIgnore
     private UserRole role;

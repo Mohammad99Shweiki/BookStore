@@ -53,7 +53,7 @@ public class SecurityConfig {
                 .headers().frameOptions().sameOrigin()
                 .and()
                 .authorizeHttpRequests()
-                .requestMatchers("/auth/login", "/auth/register", "/auth/logout", "swagger-ui/**", "swagger-ui**", "/v3/api-docs/**", "/v3/api-docs**", "/books")
+                .requestMatchers("/auth/login", "/auth/register", "/auth/logout", "swagger-ui/**", "swagger-ui**", "/v3/api-docs/**", "/v3/api-docs**", "/books", "books/onSale")
                 .permitAll()
                 .anyRequest()
                 .authenticated()
