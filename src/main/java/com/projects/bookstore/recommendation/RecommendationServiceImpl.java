@@ -14,6 +14,7 @@ import org.springframework.web.client.RestTemplate;
 import java.io.IOException;
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -25,12 +26,16 @@ public class RecommendationServiceImpl implements RecommendationService {
     private String modelUrl;
 
     @Override
-    public List embedText(String text) {
+    public List<Float> embedText(String text) {
         RestTemplate restTemplate = new RestTemplate();
         EmbeddingRequestBody requestBody = EmbeddingRequestBody.builder()
                 .content(text)
                 .build();
-        return restTemplate.postForObject(modelUrl, requestBody, List.class);
+        List<Double> list = restTemplate.postForObject(modelUrl, requestBody, List.class);
+
+        return list.stream()
+                .map(Double::floatValue)
+                .collect(Collectors.toList());
     }
 
     @Override
