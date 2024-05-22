@@ -2,12 +2,10 @@ package com.projects.bookstore.store;
 
 import com.projects.bookstore.books.Book;
 import com.projects.bookstore.books.BookService;
+import com.projects.bookstore.common.exceptions.NotEnoughWalletException;
 import com.projects.bookstore.users.User;
 import com.projects.bookstore.users.UserService;
-import com.projects.bookstore.users.order.CartItem;
-import com.projects.bookstore.users.order.Order;
-import com.projects.bookstore.users.order.OrderRequest;
-import com.projects.bookstore.users.order.OrderStatus;
+import com.projects.bookstore.users.order.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -15,7 +13,6 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.Set;
-import java.util.concurrent.atomic.AtomicReference;
 
 @Service
 public class StoreServiceImpl implements StoreService {
@@ -32,20 +29,24 @@ public class StoreServiceImpl implements StoreService {
 
         Book book = bookService.getById(bookId);
 
-        if (user.getCart() == null)
-            user.setCart(new HashSet<>());
 
-        CartItem existingCartItem = user.getCart().stream()
-                .filter(item -> item.getBookId().equals(bookId))
-                .findFirst()
-                .orElse(null);
-
-        if (existingCartItem != null) {
-            existingCartItem.setQuantity(existingCartItem.getQuantity() + quantity);
+        CartItem cartItem;
+        if (user.getCart().getItems().containsKey(bookId)) {
+            cartItem = user.getCart().getItems().get(bookId);
+            cartItem.setQuantity(cartItem.getQuantity() + quantity);
+            cartItem.setTotalPrice(cartItem.getTotalPrice() + (quantity * cartItem.getPrice()));
+            user.getCart().setTotalPrice(user.getCart().getTotalPrice() + (quantity * cartItem.getPrice()));
         } else {
-            user.getCart().add(new CartItem(bookId, quantity));
+            cartItem = CartItem.builder()
+                    .bookTitle(book.getTitle())
+                    .bookAuthors(book.getAuthors())
+                    .quantity(quantity)
+                    .price(book.getPrice())
+                    .totalPrice((quantity * book.getPrice()))
+                    .build();
+            user.getCart().getItems().put(bookId, cartItem);
+            user.getCart().setTotalPrice(user.getCart().getTotalPrice() + (quantity * book.getPrice()));
         }
-
         userService.save(user);
     }
 
@@ -53,7 +54,8 @@ public class StoreServiceImpl implements StoreService {
     public void removeFromCart(String userId, String bookId) {
         User user = userService.getById(userId);
 
-        user.getCart().removeIf(item -> item.getBookId().equals(bookId));
+        user.getCart().setTotalPrice(user.getCart().getTotalPrice() - user.getCart().getItems().get(bookId).getTotalPrice());
+        user.getCart().getItems().remove(bookId);
 
         userService.save(user);
     }
@@ -62,7 +64,8 @@ public class StoreServiceImpl implements StoreService {
     public void clearCart(String userId) {
         User user = userService.getById(userId);
 
-        user.getCart().clear();
+        user.getCart().getItems().clear();
+        user.getCart().setTotalPrice(0.0);
 
         userService.save(user);
     }
@@ -72,40 +75,58 @@ public class StoreServiceImpl implements StoreService {
     public void purchaseCart(String userId, OrderRequest orderRequest) {
         User user = userService.getById(userId);
 
+        if (user.getWallet() < user.getCart().getTotalPrice()) {
+            throw new NotEnoughWalletException();
+        }
+
         Order order = new Order();
-        order.setItems(user.getCart());
+        order.setCart(user.getCart());
 
         Set<String> genres = new HashSet<>();
-        AtomicReference<Double> total = new AtomicReference<>(0d);
-        user.getCart()
-                .forEach(item -> {
-                    Book book = bookService.getById(item.getBookId());
-                    int quantitySold = item.getQuantity();
-                    book.setSold(book.getSold() + quantitySold);
-                    genres.addAll(book.getGenres());
-                    total.updateAndGet(v -> (v + quantitySold * book.getPrice()));
-                    bookService.save(book);
-                });
+        user.getCart().getItems().forEach((key, value) -> {
+
+            Book book = bookService.getById(key);
+            int quantitySold = value.getQuantity();
+            book.setSold(book.getSold() + quantitySold);
+            genres.addAll(book.getGenres());
+            bookService.save(book);
+        });
 
         order.setDate(LocalDate.now().toString());
         order.setAddress(orderRequest.getAddress());
         order.setPhoneNo(orderRequest.getPhoneNo());
         order.setStatus(OrderStatus.CONFIRMED);
-        order.setTotalPrice(total.get());
+        order.setTotalPrice(user.getCart().getTotalPrice());
 
         user.getFavoriteGenres().addAll(genres);
         userService.embedUserFavoriteGenres(user);
 
-        user.getOrders().add(order);
-        user.getCart().clear();
+        if (user.getOrders() == null) {
+            user.setOrders(new OrdersEntity());
+        }
+
+        user.getOrders().getOrders().add(order);
+        user.getOrders().setTotal(user.getOrders().getTotal() + order.getTotalPrice());
+
+        user.setCart(new Cart());
+
+        user.setWallet(user.getWallet() - order.getTotalPrice());
         userService.save(user);
     }
 
     @Override
-    public Set<Order> getPurchaseHistory(String userId) {
+    public OrdersEntity getPurchaseHistory(String userId) {
         User user = userService.getById(userId);
-        if (user.getOrders() == null)
-            user.setOrders(new HashSet<>());
+        if (user.getOrders() == null) {
+            user.setOrders(OrdersEntity.builder()
+                    .total(0.0)
+                    .build());
+        }
         return user.getOrders();
+    }
+
+    @Override
+    public Cart getUserCart(String userId) {
+        return userService.getById(userId).getCart();
     }
 }

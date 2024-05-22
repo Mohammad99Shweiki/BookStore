@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.*;
 import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 
 @RestController
 @RequiredArgsConstructor
@@ -42,12 +41,6 @@ public class BookController {
     @GetMapping("/search/")
     public ResponseEntity<List<Book>> searchBooks(@RequestParam String query) throws IOException {
         List<Book> books = bookService.searchBooks(query);
-        return ResponseEntity.ok(books);
-    }
-
-    @GetMapping("/purchased/{userId}")
-    public ResponseEntity<Set<Book>> getBooksPurchasedBy(@PathVariable String userId) throws Exception {
-        Set<Book> books = bookService.getBooksPurchasedBy(userId);
         return ResponseEntity.ok(books);
     }
 

@@ -2,9 +2,6 @@ package com.projects.bookstore.users.order;
 
 import lombok.*;
 
-import java.util.HashSet;
-import java.util.Set;
-
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
@@ -14,7 +11,7 @@ import java.util.Set;
 public class Order {
     private String date;
 
-    private Set<CartItem> items = new HashSet<>();
+    private Cart cart;
 
     private Double totalPrice;
 
@@ -23,8 +20,4 @@ public class Order {
     private String address;
 
     private String phoneNo;
-
-    public void setItems(Set<CartItem> items) {
-        this.getItems().addAll(items);
-    }
 }

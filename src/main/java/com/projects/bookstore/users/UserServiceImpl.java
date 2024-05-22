@@ -73,6 +73,9 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         if (user.getOrders() != null) {
             existingUser.setOrders(user.getOrders());
         }
+        if (user.getWallet() != null) {
+            existingUser.setWallet(user.getWallet());
+        }
         return userRepository.save(existingUser).getUserId();
     }
 
@@ -108,6 +111,11 @@ public class UserServiceImpl implements UserService, UserDetailsService {
             List<Float> embedding = recommendationService.embedText(userFavoriteGenres);
             user.setEmbedding(embedding);
         }
+    }
+
+    @Override
+    public Boolean existsByEmail(String email) {
+        return userRepository.existsByEmail(email);
     }
 
 }

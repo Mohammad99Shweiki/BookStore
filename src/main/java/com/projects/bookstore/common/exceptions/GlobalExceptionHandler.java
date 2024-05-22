@@ -15,8 +15,12 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(RuntimeException.class)
     public ResponseEntity<Object> handleObjectNotFoundException(RuntimeException ex) {
-        ex.printStackTrace();
         return new ResponseEntity<>(ex.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+    @ExceptionHandler(NotEnoughWalletException.class)
+    public ResponseEntity<Object> handleObjectNotFoundException(NotEnoughWalletException ex) {
+        return new ResponseEntity<>(ex.getMessage(), HttpStatus.CONFLICT);
     }
 
 }

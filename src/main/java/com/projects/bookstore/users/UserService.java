@@ -20,4 +20,6 @@ public interface UserService {
     List<Book> recommendBooks(String userId) throws IOException;
 
     void embedUserFavoriteGenres(User user);
+
+    Boolean existsByEmail(String email);
 }

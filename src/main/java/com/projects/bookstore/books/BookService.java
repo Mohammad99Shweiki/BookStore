@@ -5,14 +5,11 @@ import org.springframework.data.domain.Pageable;
 
 import java.io.IOException;
 import java.util.List;
-import java.util.Set;
 
 public interface BookService {
     Page<Book> getAll(Pageable pageable);
 
     List<Book> searchBooks(String search) throws IOException;
-
-    Set<Book> getBooksPurchasedBy(String userId) throws Exception;
 
     List<Book> getSimilar(String id) throws IOException;
 

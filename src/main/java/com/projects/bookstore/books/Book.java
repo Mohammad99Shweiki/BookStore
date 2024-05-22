@@ -23,7 +23,6 @@ import java.util.List;
 @JsonSerialize
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Book {
-
     @Id
     private String isbn;
 

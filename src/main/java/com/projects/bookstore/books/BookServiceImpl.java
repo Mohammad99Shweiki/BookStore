@@ -2,9 +2,6 @@ package com.projects.bookstore.books;
 
 import com.projects.bookstore.common.exceptions.ObjectNotFoundException;
 import com.projects.bookstore.recommendation.RecommendationService;
-import com.projects.bookstore.users.User;
-import com.projects.bookstore.users.UserRepository;
-import com.projects.bookstore.users.order.CartItem;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -12,7 +9,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
-import java.util.*;
+import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 
@@ -21,8 +19,6 @@ import java.util.stream.Collectors;
 public class BookServiceImpl implements BookService {
 
     private final BookRepository bookRepository;
-
-    private final UserRepository userRepository;
 
     private final RecommendationService recommendationService;
 
@@ -37,22 +33,6 @@ public class BookServiceImpl implements BookService {
     public List<Book> searchBooks(String search) throws IOException {
         List<Float> embedding = recommendationService.embedText(search);
         return recommendationService.knnQuery(embedding);
-    }
-
-    @Override
-    @Transactional(readOnly = true)
-    public Set<Book> getBooksPurchasedBy(String userId) throws ObjectNotFoundException {
-        Optional<User> userOptional = userRepository.findByUserId(userId);
-
-        if (userOptional.isPresent()) {
-            User user = userOptional.get();
-            Set<String> bookIds = user.getOrders().stream()
-                    .flatMap(order -> order.getItems().stream().map(CartItem::getBookId))
-                    .collect(Collectors.toSet());
-            return new HashSet<>((Collection<? extends Book>) bookRepository.findAllById(bookIds));
-        } else {
-            throw new ObjectNotFoundException(userId);
-        }
     }
 
     @Override

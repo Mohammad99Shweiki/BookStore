@@ -2,7 +2,9 @@ package com.projects.bookstore.config;
 
 import com.projects.bookstore.config.jwt.JwtUtils;
 import com.projects.bookstore.users.User;
-import com.projects.bookstore.users.UserRepository;
+import com.projects.bookstore.users.UserService;
+import com.projects.bookstore.users.order.Cart;
+import com.projects.bookstore.users.order.OrdersEntity;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
@@ -16,6 +18,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashSet;
+
 
 @CrossOrigin(origins = "*")
 @RestController
@@ -24,7 +28,7 @@ import org.springframework.web.bind.annotation.*;
 public class AuthController {
     private final AuthenticationManager authenticationManager;
 
-    private final UserRepository userRepository;
+    private final UserService userService;
 
     private final PasswordEncoder encoder;
 
@@ -54,7 +58,7 @@ public class AuthController {
 
     @PostMapping("/register")
     public ResponseEntity<?> registerUser(@Valid @RequestBody RegisterRequest registerRequest) {
-        if (userRepository.existsByEmail(registerRequest.getEmail())) {
+        if (userService.existsByEmail(registerRequest.getEmail())) {
             return ResponseEntity
                     .badRequest()
                     .body(new MessageResponse("Error: Email is already in use!"));
@@ -65,12 +69,15 @@ public class AuthController {
                 .firstName(registerRequest.getFirstName())
                 .lastName(registerRequest.getLastName())
                 .email(registerRequest.getEmail())
-                .favoriteGenres(registerRequest.getFavoriteGenres())
+                .favoriteGenres(registerRequest.getFavoriteGenres() == null ? new HashSet<>() : registerRequest.getFavoriteGenres())
                 .password(encoder.encode(registerRequest.getPassword()))
                 .role(registerRequest.getRole())
+                .cart(new Cart())
+                .orders(new OrdersEntity())
+                .wishlist(new HashSet<>())
                 .build();
 
-        userRepository.save(user);
+        userService.save(user);
 
         return ResponseEntity.ok(new MessageResponse("User registered successfully!"));
     }

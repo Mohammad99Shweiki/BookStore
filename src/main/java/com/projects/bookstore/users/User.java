@@ -1,8 +1,8 @@
 package com.projects.bookstore.users;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.projects.bookstore.users.order.CartItem;
-import com.projects.bookstore.users.order.Order;
+import com.projects.bookstore.users.order.Cart;
+import com.projects.bookstore.users.order.OrdersEntity;
 import jakarta.validation.constraints.Email;
 import lombok.*;
 import org.springframework.data.annotation.Id;
@@ -38,11 +38,11 @@ public class User implements UserDetails {
     @JsonIgnore
     private String password;
 
-    private Set<String> wishlist = new HashSet<>();
+    private Set<String> wishlist;
 
-    private Set<CartItem> cart = new HashSet<>();
+    private Cart cart;
 
-    private Set<Order> orders = new HashSet<>();
+    private OrdersEntity orders;
 
     @JsonIgnore
     private UserRole role;
@@ -52,6 +52,8 @@ public class User implements UserDetails {
     @Field(type = FieldType.Dense_Vector, dims = 384)
     @JsonIgnore
     private List<Float> embedding;
+
+    private Double wallet = 0.0;
 
     @Builder.Default
     private boolean accountNonExpired = true;
