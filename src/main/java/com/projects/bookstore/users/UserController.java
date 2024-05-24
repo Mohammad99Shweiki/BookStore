@@ -2,6 +2,7 @@ package com.projects.bookstore.users;
 
 import com.projects.bookstore.books.Book;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -30,8 +31,8 @@ public class UserController {
     }
 
     @GetMapping
-    public ResponseEntity<List<User>> getAll(Pageable pageable) {
-        List<User> users = userService.getAll(pageable);
+    public ResponseEntity<Page<User>> getAll(Pageable pageable) {
+        Page<User> users = userService.getAll(pageable);
         return ResponseEntity.ok(users);
     }
 

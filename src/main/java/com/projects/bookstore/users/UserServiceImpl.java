@@ -4,6 +4,7 @@ import com.projects.bookstore.books.Book;
 import com.projects.bookstore.common.exceptions.ObjectNotFoundException;
 import com.projects.bookstore.recommendation.RecommendationService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -13,8 +14,6 @@ import org.springframework.stereotype.Service;
 import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
-import java.util.stream.StreamSupport;
 
 @Service
 @RequiredArgsConstructor
@@ -31,10 +30,8 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     }
 
     @Override
-    public List<User> getAll(Pageable pageable) {
-        Iterable<User> iterable = userRepository.findAll(pageable);
-        return StreamSupport.stream(iterable.spliterator(), false)
-                .collect(Collectors.toList());
+    public Page<User> getAll(Pageable pageable) {
+        return userRepository.findAll(pageable);
     }
 
     @Override
