@@ -74,13 +74,13 @@ public class BookServiceImpl implements BookService {
                 existingBook.setTitle(book.getTitle());
             }
             if (book.getAuthors() != null && !book.getAuthors().isEmpty()) {
-                existingBook.getAuthors().addAll(book.getAuthors());
+                existingBook.setAuthors(book.getAuthors());
             }
             if (book.getPublisher() != null) {
                 existingBook.setPublisher(book.getPublisher());
             }
             if (book.getGenres() != null && !book.getGenres().isEmpty()) {
-                existingBook.getGenres().addAll(book.getGenres());
+                existingBook.setGenres(book.getGenres());
             }
             if (book.getDescription() != null) {
                 existingBook.setDescription(book.getDescription());

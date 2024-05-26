@@ -38,7 +38,7 @@ public class BookController {
         return ResponseEntity.ok(similarBooks);
     }
 
-    @GetMapping("/search/")
+    @GetMapping("/search")
     public ResponseEntity<List<Book>> searchBooks(@RequestParam String query) throws IOException {
         List<Book> books = bookService.searchBooks(query);
         return ResponseEntity.ok(books);
