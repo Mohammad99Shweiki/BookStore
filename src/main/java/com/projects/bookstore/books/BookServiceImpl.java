@@ -148,7 +148,7 @@ public class BookServiceImpl implements BookService {
     }
 
     private void updateEmbedding(Book book) {
-        List<Float> embedding = recommendationService.embedText(book.getDescription());
+        List<Float> embedding = recommendationService.embedText(book.getTitle() + ' ' + book.getDescription());
         book.setEmbedding(embedding);
     }
 }
