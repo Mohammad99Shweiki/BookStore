@@ -9,7 +9,7 @@ import java.util.List;
 public interface BookService {
     Page<Book> getAll(Pageable pageable);
 
-    List<Book> searchBooks(String search) throws IOException;
+    Page<Book> searchBooks(String search, Pageable pageable) throws IOException;
 
     List<Book> getSimilar(String id) throws IOException;
 

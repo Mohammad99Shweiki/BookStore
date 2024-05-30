@@ -39,8 +39,8 @@ public class BookController {
     }
 
     @GetMapping("/search")
-    public ResponseEntity<List<Book>> searchBooks(@RequestParam String query) throws IOException {
-        List<Book> books = bookService.searchBooks(query);
+    public ResponseEntity<Page<Book>> searchBooks(@RequestParam String query, Pageable pageable) throws IOException {
+        Page<Book> books = bookService.searchBooks(query, pageable);
         return ResponseEntity.ok(books);
     }
 

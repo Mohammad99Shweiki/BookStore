@@ -4,6 +4,7 @@ import com.projects.bookstore.common.exceptions.ObjectNotFoundException;
 import com.projects.bookstore.recommendation.RecommendationService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -30,9 +31,14 @@ public class BookServiceImpl implements BookService {
 
     @Override
     @Transactional
-    public List<Book> searchBooks(String search) throws IOException {
+    public Page<Book> searchBooks(String search, Pageable pageable) throws IOException {
         List<Float> embedding = recommendationService.embedText(search);
-        return recommendationService.knnQuery(embedding);
+        List<Book> books = recommendationService.knnQuery(embedding);
+        int start = (int) pageable.getOffset();
+        int end = Math.min((start + pageable.getPageSize()), books.size());
+        List<Book> pageContent = books.subList(start, end);
+
+        return new PageImpl<>(pageContent, pageable, books.size());
     }
 
     @Override
