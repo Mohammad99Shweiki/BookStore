@@ -33,12 +33,8 @@ public class BookServiceImpl implements BookService {
     @Transactional
     public Page<Book> searchBooks(String search, Pageable pageable) throws IOException {
         List<Float> embedding = recommendationService.embedText(search);
-        List<Book> books = recommendationService.knnQuery(embedding);
-        int start = (int) pageable.getOffset();
-        int end = Math.min((start + pageable.getPageSize()), books.size());
-        List<Book> pageContent = books.subList(start, end);
-
-        return new PageImpl<>(pageContent, pageable, books.size());
+        List<Book> books = recommendationService.search(search, "authors", embedding);
+        return paginate(pageable, books);
     }
 
     @Override
@@ -156,5 +152,13 @@ public class BookServiceImpl implements BookService {
     private void updateEmbedding(Book book) {
         List<Float> embedding = recommendationService.embedText(book.getTitle() + ' ' + book.getDescription());
         book.setEmbedding(embedding);
+    }
+
+    private PageImpl<Book> paginate(Pageable pageable, List<Book> books) {
+        int start = (int) pageable.getOffset();
+        int end = Math.min((start + pageable.getPageSize()), books.size());
+        List<Book> pageContent = books.subList(start, end);
+
+        return new PageImpl<>(pageContent, pageable, books.size());
     }
 }
