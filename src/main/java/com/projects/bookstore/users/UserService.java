@@ -12,6 +12,8 @@ public interface UserService {
 
     Page<User> getAll(Pageable pageable);
 
+    List<User> getAll();
+
     User save(User user);
 
     String update(String userId, User user);

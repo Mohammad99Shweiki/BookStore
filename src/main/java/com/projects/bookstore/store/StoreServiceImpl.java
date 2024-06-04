@@ -12,6 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @Service
@@ -128,5 +129,15 @@ public class StoreServiceImpl implements StoreService {
     @Override
     public Cart getUserCart(String userId) {
         return userService.getById(userId).getCart();
+    }
+
+    @Override
+    public OrdersReport getOrdersReport() {
+        List<Order> orders = userService.getAll()
+                .stream()
+                .map(user -> user.getOrders().getOrders())
+                .flatMap(Set::stream)
+                .toList();
+        return OrderUtility.makeReport(orders);
     }
 }

@@ -35,6 +35,11 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     }
 
     @Override
+    public List<User> getAll() {
+        return userRepository.findAll();
+    }
+
+    @Override
     public User save(User user) {
         embedUserFavoriteGenres(user);
         return userRepository.save(user);

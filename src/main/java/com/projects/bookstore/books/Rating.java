@@ -11,4 +11,6 @@ public class Rating {
     private String userId;
 
     private Integer rating;
+
+    private String description;
 }

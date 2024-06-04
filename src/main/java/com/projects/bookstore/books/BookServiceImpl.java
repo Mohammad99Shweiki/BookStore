@@ -103,9 +103,6 @@ public class BookServiceImpl implements BookService {
             if (book.getPages() != null) {
                 existingBook.setPages(book.getPages());
             }
-            if (book.getFileLink() != null) {
-                existingBook.setFileLink(book.getFileLink());
-            }
             if (book.getImageLink() != null) {
                 existingBook.setImageLink(book.getImageLink());
             }
@@ -120,6 +117,10 @@ public class BookServiceImpl implements BookService {
             }
             if (book.getAwards() != null && !book.getAwards().isEmpty()) {
                 existingBook.getAwards().addAll(book.getAwards());
+            }
+            if (book.getOnSale() != null && book.getOnSale().equals(Boolean.TRUE) && book.getSalePrice() != null) {
+                existingBook.setOnSale(book.getOnSale());
+                existingBook.setSalePrice(book.getSalePrice());
             }
             return bookRepository.save(existingBook).getIsbn();
         }

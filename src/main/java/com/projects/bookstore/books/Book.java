@@ -56,8 +56,6 @@ public class Book {
 
     private String imageLink;
 
-    private String fileLink;
-
     @Field(type = FieldType.Dense_Vector, dims = 384)
     @JsonIgnore
     private List<Float> embedding;

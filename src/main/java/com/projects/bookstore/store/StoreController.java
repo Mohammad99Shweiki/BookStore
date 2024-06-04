@@ -3,6 +3,7 @@ package com.projects.bookstore.store;
 import com.projects.bookstore.users.order.Cart;
 import com.projects.bookstore.users.order.OrderRequest;
 import com.projects.bookstore.users.order.OrdersEntity;
+import com.projects.bookstore.users.order.OrdersReport;
 import jakarta.validation.constraints.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -49,5 +50,10 @@ public class StoreController {
     public ResponseEntity<Cart> getUserCart(@PathVariable String userId) {
         Cart cartItems = storeService.getUserCart(userId);
         return ResponseEntity.ok(cartItems);
+    }
+
+    @GetMapping("/report")
+    public ResponseEntity<OrdersReport> getOrdersReport() {
+        return ResponseEntity.ok(storeService.getOrdersReport());
     }
 }
