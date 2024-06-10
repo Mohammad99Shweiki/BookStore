@@ -38,6 +38,12 @@ public class BookServiceImpl implements BookService {
     }
 
     @Override
+    @Transactional
+    public Page<Book> searchByTitle(String title, Pageable pageable) {
+        return bookRepository.findByTitleContaining(title, pageable);
+    }
+
+    @Override
     public List<Book> getSimilar(String id) throws IOException {
         Book book = bookRepository.findById(id)
                 .orElseThrow(() -> new ObjectNotFoundException(id));

@@ -26,5 +26,7 @@ public interface BookService {
     void delete(String id);
 
     void deleteAll();
+
+    public Page<Book> searchByTitle(String title, Pageable pageable);
 }
 
