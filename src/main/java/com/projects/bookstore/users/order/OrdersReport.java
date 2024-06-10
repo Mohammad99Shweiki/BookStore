@@ -3,7 +3,6 @@ package com.projects.bookstore.users.order;
 import lombok.*;
 
 import java.util.List;
-import java.util.Map;
 
 @Builder
 @AllArgsConstructor
@@ -13,8 +12,6 @@ import java.util.Map;
 @Setter
 public class OrdersReport {
     List<Order> orders;
-
-    Map<OrderStatus, Long> orderStatusMap;
 
     Double totalProfit;
 }

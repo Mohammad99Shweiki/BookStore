@@ -98,7 +98,6 @@ public class StoreServiceImpl implements StoreService {
         order.setDate(LocalDate.now().toString());
         order.setAddress(orderRequest.getAddress());
         order.setPhoneNo(orderRequest.getPhoneNo());
-        order.setStatus(OrderStatus.CONFIRMED);
         order.setTotalPrice(user.getCart().getTotalPrice());
 
         user.getFavoriteGenres().addAll(genres);

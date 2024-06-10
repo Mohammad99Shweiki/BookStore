@@ -15,8 +15,6 @@ public class Order {
 
     private Double totalPrice;
 
-    private OrderStatus status;
-
     private String address;
 
     private String phoneNo;
