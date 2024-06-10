@@ -19,7 +19,7 @@ import java.util.List;
 @Getter
 @Setter
 @ToString
-@Document(indexName = "books")
+@Document(indexName = "books_2")
 @JsonSerialize
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Book {
