@@ -44,7 +44,7 @@ public class BookController {
         return ResponseEntity.ok(books);
     }
 
-    @GetMapping("/similar/{title}")
+    @GetMapping("/like/{title}")
     public ResponseEntity<Page<Book>> searchSimilar(@PathVariable @NotNull String title, Pageable pageable) {
         Page<Book> books = bookService.searchByTitle(title, pageable);
         return ResponseEntity.ok(books);
