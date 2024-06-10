@@ -35,7 +35,8 @@ public class StoreServiceImpl implements StoreService {
         if (user.getCart().getItems().containsKey(bookId)) {
             cartItem = user.getCart().getItems().get(bookId);
             cartItem.setQuantity(cartItem.getQuantity() + quantity);
-            cartItem.setTotalPrice(cartItem.getTotalPrice() + (quantity * cartItem.getPrice()));
+            Float itemPrice = book.getOnSale() ? book.getSalePrice() : book.getPrice();
+            cartItem.setTotalPrice(cartItem.getTotalPrice() + (quantity * (itemPrice)));
             user.getCart().setTotalPrice(user.getCart().getTotalPrice() + (quantity * cartItem.getPrice()));
         } else {
             cartItem = CartItem.builder()
