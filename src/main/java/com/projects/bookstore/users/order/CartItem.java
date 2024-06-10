@@ -14,6 +14,8 @@ import java.util.List;
 public class CartItem {
     private String bookTitle;
 
+    private String bookImage;
+
     private List<String> bookAuthors = new ArrayList<>();
 
     private Integer quantity;

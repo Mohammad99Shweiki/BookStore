@@ -41,6 +41,7 @@ public class StoreServiceImpl implements StoreService {
         } else {
             cartItem = CartItem.builder()
                     .bookTitle(book.getTitle())
+                    .bookImage(book.getImageLink())
                     .bookAuthors(book.getAuthors())
                     .quantity(quantity)
                     .price(book.getPrice())
